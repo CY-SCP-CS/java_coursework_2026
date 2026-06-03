@@ -30,10 +30,10 @@
 
 ## Prompt 01 — Architect Agent: 初始类设计
 
-**时间**: 2026-06-03
+**时间**: 2026-06-03 14:25
 **工具/模型**: Claude Code (deepseek-v4-flash)
 **Agent 角色**: Architect Agent
-**相关提交**: （待填写）
+**相关提交**: 9dc43e2
 
 ### 我的 Prompt
 
@@ -74,11 +74,25 @@
 
 ### AI 响应摘要
 
-（待填写）
+AI 建议了完整的类结构设计：
+1. **Person (抽象类)**: 包含 id, name, role 字段，提供抽象方法 getDescription()
+2. **Player extends Person**: 增加 teamId, level, winRate, ownedHeroes（List\<Hero\>），提供防御性拷贝
+3. **Admin extends Person**: 增加 adminLevel 字段
+4. **Hero**: heroId, name, heroType (枚举), baseStats (Map), compatibleEquipment (List\<Equipment\>)
+5. **Equipment**: equipmentId, name, equipmentType (枚举), stats (Map), usageCount
+6. **Team**: teamId, name, members (List\<Player\>)，含平均等级、胜率、最佳队员计算方法
+7. **MatchRecord**: matchId, date (LocalDate), teamA, teamB, result (枚举), heroPicks (List\<String\>)
+8. **接口建议**: Searchable\<T\>（searchById/searchByName），Persistable/Reportable 可选
+9. **包结构建议**: model, service, util
 
 ### 我的决定
 
-（待填写：接受/修改/拒绝，及原因）
+**全部接受**，但做了以下调整：
+- 新增 `Reportable` 接口替代 Persistable，因为当前阶段重点是信息展示而非持久化
+- 接受 Searchable\<T\> 泛型接口的设计
+- Team 的 getMembers() 采用防御性拷贝返回 ArrayList 拷贝
+- 所有类的集合字段在构造方法中初始化为空集合，避免 NullPointerException
+- 添加了 equals() 和 hashCode() 的重写（基于 ID 字段）
 
 ---
 
