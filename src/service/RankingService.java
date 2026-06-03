@@ -43,11 +43,70 @@ public class RankingService {
     }
 
     /**
+     * 按比赛场次排名
+     * 平局处理：场次相同按胜率降序
+     */
+    public List<Player> getLeaderboardByMatches(int topN) {
+        return dataManager.getAllPlayers().stream()
+                .sorted(Comparator.<Player, Integer>comparing(
+                                p -> getPlayerMatchCount(p.getId()),
+                                Comparator.reverseOrder())
+                        .thenComparing(Comparator.comparing(Player::getWinRate).reversed()))
+                .limit(topN)
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 按装备使用次数排名
      */
     public List<Equipment> getEquipmentRankingByUsage() {
         return dataManager.getAllEquipment().stream()
                 .sorted(Comparator.comparing(Equipment::getUsageCount).reversed())
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 按使用该装备的英雄数量降序排列
+     */
+    public List<Equipment> getEquipmentRankingByHeroCount(Map<String, Integer> heroCountMap) {
+        return dataManager.getAllEquipment().stream()
+                .sorted(Comparator.<Equipment, Integer>comparing(
+                                eq -> heroCountMap.getOrDefault(eq.getEquipmentId(), 0),
+                                Comparator.reverseOrder()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 自定义综合评分
+     * 公式：customScore = winRate * 0.5 + level * 2.0 + matchesCount * 0.1
+     */
+    public double getCustomScore(Player player) {
+        int matchesCount = getPlayerMatchCount(player.getId());
+        return player.getWinRate() * 0.5 + player.getLevel() * 2.0 + matchesCount * 0.1;
+    }
+
+    /**
+     * 按自定义评分排名
+     */
+    public List<Player> getLeaderboardByCustomScore(int topN) {
+        return dataManager.getAllPlayers().stream()
+                .sorted(Comparator.comparing(this::getCustomScore)
+                        .reversed()
+                        .thenComparing(Comparator.comparing(Player::getWinRate).reversed()))
+                .limit(topN)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 统计玩家参与的比赛场次
+     */
+    public int getPlayerMatchCount(String playerId) {
+        Player player = dataManager.getPlayerById(playerId);
+        if (player == null || player.getTeamId() == null) return 0;
+
+        String teamId = player.getTeamId();
+        return (int) dataManager.getAllMatchRecords().stream()
+                .filter(m -> m.getTeamA().equals(teamId) || m.getTeamB().equals(teamId))
+                .count();
     }
 }

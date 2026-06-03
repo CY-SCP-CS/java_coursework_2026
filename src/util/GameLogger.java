@@ -3,6 +3,7 @@ package util;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 /**
  * 四级分层日志工具
@@ -33,6 +34,7 @@ public class GameLogger {
     private static PrintWriter fileWriter = null;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     private static final String LOG_FILE = "logs/system.log";
+    private static final Object LOCK = new Object();
 
     static {
         // Ensure log directory exists
@@ -89,8 +91,15 @@ public class GameLogger {
     }
 
     public static void error(String source, String message, Throwable e) {
-        log(Level.ERROR, source, message + " | Exception: " + e.getClass().getSimpleName()
-                + " - " + e.getMessage());
+        String stackTrace = (e != null)
+                ? String.join("\n  ", Arrays.stream(e.getStackTrace())
+                        .limit(10)
+                        .map(StackTraceElement::toString)
+                        .toArray(String[]::new))
+                : "(no exception)";
+        log(Level.ERROR, source, message + " | " + e.getClass().getSimpleName()
+                + ": " + (e.getMessage() != null ? e.getMessage() : "null")
+                + "\n  StackTrace (top 10):\n  " + stackTrace);
     }
 
     // ========================================================================
@@ -106,12 +115,14 @@ public class GameLogger {
         String logLine = String.format("[%-5s] [%s] [%s] %s",
                 level.name(), timestamp, source, message);
 
-        // Console output
-        System.out.println(logLine);
+        synchronized (LOCK) {
+            // Console output
+            System.out.println(logLine);
 
-        // File output
-        if (fileWriter != null) {
-            fileWriter.println(logLine);
+            // File output
+            if (fileWriter != null) {
+                fileWriter.println(logLine);
+            }
         }
     }
 

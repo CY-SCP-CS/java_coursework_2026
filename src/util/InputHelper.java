@@ -1,6 +1,7 @@
 package util;
 
 import java.util.InputMismatchException;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -16,10 +17,16 @@ public class InputHelper {
      * 读取整数
      */
     public static int readInt(String prompt) {
+        Objects.requireNonNull(prompt, "prompt must not be null");
         while (true) {
             System.out.print(prompt);
+            String input = scanner.nextLine();
+            if (input == null) {
+                System.out.println("Input stream ended. Exiting.");
+                System.exit(0);
+            }
             try {
-                return Integer.parseInt(scanner.nextLine().trim());
+                return Integer.parseInt(input.trim());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter an integer.");
             }
@@ -30,9 +37,15 @@ public class InputHelper {
      * 读取字符串（非空）
      */
     public static String readString(String prompt) {
+        Objects.requireNonNull(prompt, "prompt must not be null");
         while (true) {
             System.out.print(prompt);
-            String input = scanner.nextLine().trim();
+            String input = scanner.nextLine();
+            if (input == null) {
+                System.out.println("Input stream ended. Exiting.");
+                System.exit(0);
+            }
+            input = input.trim();
             if (!input.isEmpty()) {
                 return input;
             }
@@ -44,6 +57,7 @@ public class InputHelper {
      * 读取限定范围的整数
      */
     public static int readIntRange(String prompt, int min, int max) {
+        Objects.requireNonNull(prompt, "prompt must not be null");
         while (true) {
             int value = readInt(prompt);
             if (value >= min && value <= max) {
@@ -57,9 +71,15 @@ public class InputHelper {
      * 读取 Y/N 确认
      */
     public static boolean readYesNo(String prompt) {
+        Objects.requireNonNull(prompt, "prompt must not be null");
         while (true) {
             System.out.print(prompt + " (Y/N): ");
-            String input = scanner.nextLine().trim().toUpperCase();
+            String input = scanner.nextLine();
+            if (input == null) {
+                System.out.println("Input stream ended. Exiting.");
+                System.exit(0);
+            }
+            input = input.trim().toUpperCase();
             if (input.equals("Y")) return true;
             if (input.equals("N")) return false;
             System.out.println("Please enter Y or N.");
@@ -70,10 +90,16 @@ public class InputHelper {
      * 读取限定范围的双精度浮点数
      */
     public static double readDouble(String prompt, double min, double max) {
+        Objects.requireNonNull(prompt, "prompt must not be null");
         while (true) {
             System.out.print(prompt);
+            String input = scanner.nextLine();
+            if (input == null) {
+                System.out.println("Input stream ended. Exiting.");
+                System.exit(0);
+            }
             try {
-                double value = Double.parseDouble(scanner.nextLine().trim());
+                double value = Double.parseDouble(input.trim());
                 if (value >= min && value <= max) {
                     return value;
                 }
@@ -89,6 +115,10 @@ public class InputHelper {
      */
     public static void pressEnterToContinue() {
         System.out.print("\nPress Enter to continue...");
-        scanner.nextLine();
+        String input = scanner.nextLine();
+        if (input == null) {
+            System.out.println("Input stream ended. Exiting.");
+            System.exit(0);
+        }
     }
 }

@@ -186,6 +186,32 @@ Reviewed Prompt 05 implementation: Main.java, InputHelper.java, and GameLogger.j
 
 ---
 
+## Fix Agent (Prompt 15 — Bug修复)
+
+**Main contribution:**
+Fixed all Critical/Major issues found by Code Review Agent during the Prompt 05 review. Fixed 8 issues total:
+
+| Severity | Issue | File | Fix |
+|----------|-------|------|-----|
+| Critical | LocalDate.parse() without try-catch crashes on invalid date | Main.java | Added while+try-catch validation loop |
+| Critical | handleMatchHistory() dead code (50 lines never called) | Main.java | Wired into Player menu (option 9) and Admin menu (option 11) |
+| Major | topN accepts 0/negative causing subList crash | Main.java | Changed to readIntRange(1, 999) |
+| Major | scanner.nextLine() returns null on EOF | InputHelper.java | Added null check with System.exit |
+| Major | No null check on prompt parameter | InputHelper.java | Added Objects.requireNonNull |
+| Major | error() drops full stack trace | GameLogger.java | Added top-10 stack frames to log |
+| Major | Race condition on static fileWriter | GameLogger.java | Added synchronized(LOCK) |
+| Major | removeMatchRecord doesn't confirm existence | GameDataManager+Main | Return boolean + user feedback |
+
+**Human decision:**
+- ✅ All 8 fixes verified compiling
+- ✅ Console output now cleaner (GameDataManager logs → DEBUG level)
+- ✅ Program runs correctly after all fixes
+
+**Related commits:**
+- (Pending — current session commit)
+
+---
+
 ## Testing/Reviewer Agent
 
 **Main contribution:**

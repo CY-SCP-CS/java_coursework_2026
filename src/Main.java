@@ -83,8 +83,9 @@ public class Main {
             System.out.println("6.  View Hero Details");
             System.out.println("7.  Equipment Statistics");
             System.out.println("8.  Leaderboard");
-            System.out.println("9.  Logout");
-            int choice = InputHelper.readIntRange("Choose: ", 1, 9);
+            System.out.println("9.  Match History (Global)");
+            System.out.println("10. Logout");
+            int choice = InputHelper.readIntRange("Choose: ", 1, 10);
 
             switch (choice) {
                 case 1 -> viewPlayerProfile(player);
@@ -95,7 +96,8 @@ public class Main {
                 case 6 -> handleHeroDetails();
                 case 7 -> handleEquipmentStats();
                 case 8 -> handleLeaderboard();
-                case 9 -> {
+                case 9 -> handleMatchHistory();
+                case 10 -> {
                     authService.logout();
                     System.out.println("Logged out.");
                 }
@@ -120,8 +122,9 @@ public class Main {
             System.out.println("8.  View Hero Details");
             System.out.println("9.  Equipment Statistics");
             System.out.println("10. Leaderboard");
-            System.out.println("11. Logout");
-            int choice = InputHelper.readIntRange("Choose: ", 1, 11);
+            System.out.println("11. Match History (Global)");
+            System.out.println("12. Logout");
+            int choice = InputHelper.readIntRange("Choose: ", 1, 12);
 
             switch (choice) {
                 case 1 -> adminManagePlayers();
@@ -134,7 +137,8 @@ public class Main {
                 case 8 -> handleHeroDetails();
                 case 9 -> handleEquipmentStats();
                 case 10 -> handleLeaderboard();
-                case 11 -> {
+                case 11 -> handleMatchHistory();
+                case 12 -> {
                     authService.logout();
                     System.out.println("Logged out.");
                 }
@@ -358,13 +362,26 @@ public class Main {
                 return;
             }
             String teamId = player.getTeamId();
+            if (teamId == null) {
+                System.out.println("Player \"" + player.getName() + "\" is not on any team. No matches found.");
+                InputHelper.pressEnterToContinue();
+                return;
+            }
             filtered = allMatches.stream()
                     .filter(m -> m.getTeamA().equals(teamId) || m.getTeamB().equals(teamId))
                     .collect(Collectors.toList());
+            System.out.println("\n=== Match History for " + player.getName() + " (Team: " + teamId + ") ===");
         } else {
+            Team team = dataManager.getTeamById(id);
+            if (team == null) {
+                System.out.println("Team not found.");
+                InputHelper.pressEnterToContinue();
+                return;
+            }
             filtered = allMatches.stream()
                     .filter(m -> m.getTeamA().equals(id) || m.getTeamB().equals(id))
                     .collect(Collectors.toList());
+            System.out.println("\n=== Match History for " + team.getName() + " ===");
         }
 
         if (n > 0 && filtered.size() > n) {
@@ -399,8 +416,9 @@ public class Main {
         System.out.println("1. By Win Rate");
         System.out.println("2. By Level");
         System.out.println("3. By Equipment Usage (Equipment Ranking)");
-        int choice = InputHelper.readIntRange("Choose: ", 1, 3);
-        int topN = InputHelper.readInt("Top N: ");
+        System.out.println("4. By Custom Score");
+        int choice = InputHelper.readIntRange("Choose: ", 1, 4);
+        int topN = InputHelper.readIntRange("Top N: ", 1, 999);
 
         System.out.println();
         switch (choice) {
@@ -438,6 +456,20 @@ public class Main {
                     System.out.printf("%-4d %-12s %-10s %d\n",
                             i + 1, eq.getEquipmentId(), eq.getName(), eq.getUsageCount());
                 }
+            }
+            case 4 -> {
+                List<Player> list = rankingService.getLeaderboardByCustomScore(topN);
+                System.out.println("=== Leaderboard by Custom Score ===");
+                System.out.printf("%-4s %-10s %-8s %-8s %-8s %s\n", "Rank", "Name", "Level", "WinRate", "Score", "Team");
+                for (int i = 0; i < list.size(); i++) {
+                    Player p = list.get(i);
+                    System.out.printf("%-4d %-10s Lv.%-5d %-7.1f%% %-7.1f %s\n",
+                            i + 1, p.getName(), p.getLevel(), p.getWinRate(),
+                            rankingService.getCustomScore(p),
+                            p.getTeamId() != null ? p.getTeamId() : "N/A");
+                }
+                System.out.println("\nFormula: score = winRate * 0.5 + level * 2.0 + matches * 0.1");
+                System.out.println("Tie-breaker: same score → higher win rate first.");
             }
         }
         InputHelper.pressEnterToContinue();
@@ -694,21 +726,36 @@ public class Main {
                 }
                 case 2 -> {
                     String id = InputHelper.readString("Match ID: ");
-                    String dateStr = InputHelper.readString("Date (YYYY-MM-DD): ");
+
+                    // Date input with validation
+                    LocalDate date = null;
+                    while (date == null) {
+                        String dateStr = InputHelper.readString("Date (YYYY-MM-DD): ");
+                        try {
+                            date = LocalDate.parse(dateStr);
+                        } catch (Exception e) {
+                            System.out.println("Invalid date format. Please use YYYY-MM-DD (e.g., 2026-06-01).");
+                        }
+                    }
+
                     String teamA = InputHelper.readString("Team A ID: ");
                     String teamB = InputHelper.readString("Team B ID: ");
                     System.out.println("Result: 0=WIN, 1=LOSE, 2=DRAW");
                     int resultIdx = InputHelper.readIntRange("Choose: ", 0, 2);
                     MatchResult result = MatchResult.values()[resultIdx];
-                    MatchRecord match = new MatchRecord(id, LocalDate.parse(dateStr), teamA, teamB, result);
+                    MatchRecord match = new MatchRecord(id, date, teamA, teamB, result);
                     dataManager.addMatchRecord(match);
                     System.out.println("Match record added.");
                     InputHelper.pressEnterToContinue();
                 }
                 case 3 -> {
                     String id = InputHelper.readString("Match ID to remove: ");
-                    dataManager.removeMatchRecord(id);
-                    System.out.println("Match record removed (if existed).");
+                    boolean removed = dataManager.removeMatchRecord(id);
+                    if (removed) {
+                        System.out.println("Match record removed.");
+                    } else {
+                        System.out.println("Match record not found.");
+                    }
                     InputHelper.pressEnterToContinue();
                 }
                 case 4 -> {

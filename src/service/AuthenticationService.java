@@ -2,6 +2,7 @@ package service;
 
 import model.Person;
 import model.Role;
+import util.GameLogger;
 
 /**
  * 认证服务
@@ -25,13 +26,16 @@ public class AuthenticationService {
     public Person login(String id, String password) {
         Person person = dataManager.findPersonById(id);
         if (person == null) {
+            GameLogger.warn("AuthService", "Login failed: user not found - " + id);
             return null;
         }
         String storedPassword = dataManager.getPassword(id);
         if (storedPassword == null || !storedPassword.equals(password)) {
+            GameLogger.warn("AuthService", "Login failed: wrong password for " + id);
             return null;
         }
         this.currentUser = person;
+        GameLogger.info("AuthService", "User logged in: " + id + " (" + person.getRole() + ")");
         return person;
     }
 
@@ -39,6 +43,9 @@ public class AuthenticationService {
      * 用户登出
      */
     public void logout() {
+        if (currentUser != null) {
+            GameLogger.info("AuthService", "User logged out: " + currentUser.getId());
+        }
         this.currentUser = null;
     }
 
