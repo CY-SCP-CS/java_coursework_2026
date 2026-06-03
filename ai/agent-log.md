@@ -293,10 +293,68 @@ Implemented full `FileStorageService.java` (~280 lines) with CSV persistence for
 ## Testing/Reviewer Agent
 
 **Main contribution:**
-(To be filled)
+Created comprehensive JUnit 5 test suite with 179 tests across 13 test classes. Covers model validation boundaries, defensive copying, service layer CRUD/search/ranking logic, data integrity, logger functionality, and CSV persistence round-trips.
+
+**Bugs discovered during testing:**
+- Player constructor bypassed setters (level/winRate validation not enforced at construction)
+- GameLogger.error(null exception) threw NullPointerException
 
 **Human decision:**
-(To be filled)
+- ✅ 179/179 tests passing
+- ✅ Both bugs fixed (Player constructor → use setters; GameLogger → early return for null)
+- ✅ Tests established as regression baseline
 
 **Related commits:**
-(To be filled)
+- 990ff11 [AI-Implementation] implement test suite (179 tests, Prompt 12)
+- 1a07c73 [AI-Implementation] fix all code quality issues from architect review
+- 2ce158e [AI-Review] fix 5 code review issues
+
+---
+
+## Documentation Agent
+
+**Main contribution:**
+Generated comprehensive README.md (~250 lines) covering:
+- Project overview, features (Player/Admin/System), technology stack
+- Full directory structure with all 23 source files and 13 test files
+- Default dataset specification (20 equipment / 15 heroes / 15 players / 3 teams / 10 matches)
+- Compile, run, and test instructions (verified working)
+- OOP design principles and design patterns used
+- AI-assisted development methodology with all 8 agent roles
+- Test coverage summary (179 tests across 13 classes)
+
+**Human decision:**
+- ✅ All sections complete and accurate
+- ✅ Compile/run/test commands verified
+- ✅ Structure matches actual project layout
+
+**Related commits:**
+- a027047 [Docs] Prompt 14 — comprehensive README
+
+---
+
+## Prompt Optimization Agent
+
+**Main contribution:**
+Reviewed all 16 prompts in prompts.md against course Prompt Quality Guide (Appendix B) criteria. Developed 6-dimension scoring system (Specificity, Granularity, Verifiability, Context, Constraints, Reviewability) and rated each prompt on a 10-point scale.
+
+**Key findings:**
+| Issue | Frequency | Examples |
+|-------|-----------|----------|
+| Multi-task prompts | 3 prompts | #01 (design+commit+log), #06 (fix+implement+record) |
+| External dependency | 5 prompts | #03/04/05/10: "按 Prompt XX" with no inline context |
+| Subjective criteria | 4 prompts | "逻辑清晰", "代码风格优雅" — not quantifiable |
+| Missing verification | 8 prompts | No explicit "done" condition |
+
+**Provided:**
+- Optimized prompt template with sections: Goal, Requirements, Input, Output, Constraints
+- Per-prompt improvement suggestions with specific rewrites
+
+**Human decision:**
+- ✅ Scoring system accepted for all prompts
+- ✅ Template adopted for future prompts
+- ✅ Key issues documented: avoid multi-task, inline requirements, add verification
+
+**Related commits:**
+- d116d6b [Docs] record Prompt 11/12 results (analysis included)
+- a027047 [Docs] Prompt 14 — comprehensive README
