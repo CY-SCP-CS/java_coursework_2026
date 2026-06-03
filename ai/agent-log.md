@@ -119,6 +119,40 @@ Reviewed DataInitializer.java after Prompt 04 implementation. Verified data comp
 
 ---
 
+## Implementation Agent (Prompt 05 — Menu System)
+
+**Main contribution:**
+Implemented full menu system and input toolkit. Created `InputHelper.java` with 6 static input methods (readInt, readString, readIntRange, readDouble, readYesNo, pressEnterToContinue) using unified `nextLine()` strategy to avoid newline residue bugs. Implemented `Main.java` with 3-level menu structure (Main → Login → Player/Admin), 30+ handler methods covering all features.
+
+**Human decision:**
+- ✅ Unified nextLine() approach to fix Scanner newline bug
+- ✅ Added readDouble() for admin win rate input
+- ✅ Fixed heroCount variable scope issue during compilation
+- ✅ All handlers handle empty/null states gracefully
+- ✅ Both admin and player login paths verified working
+
+**Related commits:**
+- (Pending — [Human] commit for Prompt 05)
+
+---
+
+## Log Agent
+
+**Main contribution:**
+Created `GameLogger.java` — a 4-level hierarchical logging utility (DEBUG/INFO/WARN/ERROR). Supports configurable minimum log level, console + file output, and built-in log analysis. The `analyzeLogs()` method parses log files to detect ERROR and WARN patterns, counts occurrences, and generates structured reports that can trigger Fix Agent dispatch.
+
+**Human decision:**
+- ✅ 4 log levels with priority-based filtering
+- ✅ Console output by default, optional file output
+- ✅ Auto-creates logs/ directory
+- ✅ analyzeLogs() for automated issue detection
+- ✅ Integration-ready for all service classes
+
+**Related commits:**
+- (Pending — [Human] commit for Log Agent)
+
+---
+
 ## Testing/Reviewer Agent
 
 **Main contribution:**

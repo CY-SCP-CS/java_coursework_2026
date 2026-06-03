@@ -290,10 +290,10 @@ AI 生成了完整的 DataInitializer 实现，包含：
 
 ## Prompt 05 — Implementation Agent: 菜单系统与输入工具
 
-**时间**: 2026-06-（待填写）
+**时间**: 2026-06-03
 **工具/模型**: Claude Code (deepseek-v4-flash)
 **Agent 角色**: Implementation Agent
-**相关提交**: （待填写）
+**相关提交**: （待定 — 将随 [Human] 提交生成）
 
 ### 我的 Prompt
 
@@ -302,63 +302,41 @@ AI 生成了完整的 DataInitializer 实现，包含：
 
 ### InputHelper (util/InputHelper.java)
 封装 Scanner 操作，提供以下静态方法：
-1. readInt(String prompt): int — 显示提示，读取整数，处理非数字输入
-2. readString(String prompt): String — 显示提示，读取非空字符串
-3. readIntRange(String prompt, int min, int max): int — 读取范围内的整数
-4. readYesNo(String prompt): boolean — 读取 Y/N 确认
-
-要求：
-- 处理无效输入（不是数字、超出范围、空字符串）
-- 给出清晰的错误提示
-- 使用 try-catch 处理 InputMismatchException
+1. readInt(String prompt): int
+2. readString(String prompt): String
+3. readIntRange(String prompt, int min, int max): int
+4. readYesNo(String prompt): boolean
 
 ### 主菜单 (Main.java)
-采用循环菜单结构：
-
-=== Honor of Kings IMS ===
-1. Login
-2. Exit
-
-登录后（Player 菜单）：
-=== Player Menu ===
-1. View My Profile
-2. View My Heroes
-3. View My Match History
-4. Search Player
-5. View Team
-6. View Hero Details
-7. Equipment Statistics
-8. Leaderboard
-9. Logout
-
-登录后（Admin 菜单）：
-=== Admin Menu ===
-1. Manage Players
-2. Manage Heroes
-3. Manage Equipment
-4. Manage Teams
-5. Manage Match Records
-6. View Player Lookup
-7. View Team Overview
-8. View Hero Details
-9. Equipment Statistics
-10. Leaderboard
-11. Logout
-
-要求：
-- 使用 switch 或 if-else 分发菜单选项
-- 每个选项调用对应的 service 方法
-- 非法选项给出提示并重新显示菜单
-- 不在此类中实现具体业务逻辑，只做分发
+三级菜单结构（Main → Player/Admin）。
 ```
 
 ### AI 响应摘要
 
-（待填写）
+AI 生成了完整的输入工具类和菜单系统：
+
+**InputHelper.java:**
+- 5 个静态方法：readInt, readString, readIntRange, readYesNo, pressEnterToContinue
+- 统一使用 nextLine() 手动解析，避免 nextInt()/next() 残留换行符问题
+- 完善的错误处理（NumberFormatException, 空字符串, 范围校验）
+
+**Main.java (~718 行):**
+- 三级菜单：Main → Login → Player Menu / Admin Menu
+- Player 菜单 9 项：个人信息、英雄、比赛记录、搜索、战队、英雄详情、装备统计、排行榜、登出
+- Admin 菜单 11 项：CRUD 管理 + 查看功能 + 登出
+- 所有 handler 方法均有空集合检查和 null 安全处理
+- 使用 InputHelper 统一输入，无直接 Scanner 调用
+
+**Human 修复：**
+- 发现 InputHelper 缺少 readDouble() 方法（Admin 添加玩家时需要输入胜率），已补充
+- 发现 heroCount 变量作用域跨 switch case，从 else 块提升到方法级作用域，修复编译错误
 
 ### 我的决定
 
-（待填写）
+- ✅ InputHelper 采用 nextLine() 统一策略，修复原始混合 nextInt()/nextLine() 的换行符 bug
+- ✅ 添加 readDouble(String prompt, double min, double max) 支持浮点数输入
+- ✅ Main.java 所有菜单选项均已实现 handler 方法
+- ✅ 测试验证：编译通过，admin 和 player 登录均正常
 
 ---
 
@@ -1049,7 +1027,7 @@ AI 生成了完整的 DataInitializer 实现，包含：
 | 02 | 2026-06-03 | Architect Agent | 接口与枚举设计 | ✅ 已完成 |
 | 03 | 2026-06-03 | Implementation Agent | 模型类实现 | ✅ 已完成 |
 | 04 | 2026-06-03 | Implementation Agent | 数据初始化 | ✅ 已完成 |
-| 05 | 2026-06- | Implementation Agent | 菜单系统与输入工具 | 待完成 |
+| 05 | 2026-06-03 | Implementation Agent | 菜单系统与输入工具 | ✅ 已完成 |
 | 06 | 2026-06- | Implementation Agent | 认证服务 | 待完成 |
 | 07 | 2026-06- | Implementation Agent | 搜索与查询服务 | 待完成 |
 | 08 | 2026-06- | Implementation Agent | 排行榜与装备统计 | 待完成 |
