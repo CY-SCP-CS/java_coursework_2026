@@ -31,18 +31,24 @@ Suggested the initial OOP class structure: Person (abstract), Player, Admin, Her
 **Main contribution:**
 Implemented all 7 model classes (Person, Player, Admin, Hero, Equipment, Team, MatchRecord), 4 enums (Role, HeroType, EquipmentType, MatchResult), and 3 interfaces (Searchable, Reportable, Persistable). All classes follow encapsulation principles with private fields, defensive copying, and proper equals/hashCode.
 
+Implemented full DataInitializer with 20 equipment items, 15 heroes, 15 players, 3 teams, and 10 match records using realistic Honor of Kings data.
+
 **Human decision:**
 - ✅ Accepted full class implementations with no-arg + parameterized constructors
 - ✅ Adjusted constructors to initialize empty collections to avoid null
 - ✅ Added addHero()/removeHero() convenience methods to Player
 - ✅ Added level/winRate validation (level 1-30, winRate 0-100)
+- ✅ Added equippedItems tracking to Player (Map<String, List<String>>)
+- ✅ Player.getInfo() shows each hero's equipped items
 - ✅ All collection getters return defensive copies
 - ✅ toCSVString() uses ID-based references for object relationships
+- ✅ Data verified: 20 equip / 15 heroes / 15 players / 3 teams / 10 matches
 
 **Related commits:**
 - 9dc43e2 initial project structure and OOP class design
 - 7eac0a6 add Persistable interface and CSV serialization
 - 39649b7 implement model classes with validation
+- cdbc433 implement data initialization with full dataset
 
 ---
 
