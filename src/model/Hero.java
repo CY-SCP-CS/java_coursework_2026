@@ -112,10 +112,11 @@ public class Hero implements Reportable, Persistable {
 
     @Override
     public String toCSVString() {
-        // format: heroId,name,heroType,hp:attack:defense,equipId1|equipId2|...
+        // format: heroId,name,heroType,hp:3000|attack:200,equipId1|equipId2|...
+        // stats: entries separated by |, key:value separated by :
         String statsStr = baseStats.entrySet().stream()
                 .map(e -> e.getKey() + ":" + e.getValue())
-                .collect(Collectors.joining(":"));
+                .collect(Collectors.joining("|"));
         String equipIds = compatibleEquipment.stream()
                 .map(Equipment::getEquipmentId)
                 .collect(Collectors.joining("|"));

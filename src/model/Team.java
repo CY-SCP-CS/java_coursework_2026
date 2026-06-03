@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -117,12 +118,12 @@ public class Team implements Reportable, Persistable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Team team = (Team) o;
-        return java.util.Objects.equals(teamId, team.teamId);
+        return Objects.equals(teamId, team.teamId);
     }
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(teamId);
+        return Objects.hash(teamId);
     }
 
     // === Persistable ===
