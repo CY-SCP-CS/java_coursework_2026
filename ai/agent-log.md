@@ -29,16 +29,20 @@ Suggested the initial OOP class structure: Person (abstract), Player, Admin, Her
 ## Implementation Agent
 
 **Main contribution:**
-Implemented all 7 model classes, 4 enums, 2 interfaces, and service/util skeletons based on the architectural design.
+Implemented all 7 model classes (Person, Player, Admin, Hero, Equipment, Team, MatchRecord), 4 enums (Role, HeroType, EquipmentType, MatchResult), and 3 interfaces (Searchable, Reportable, Persistable). All classes follow encapsulation principles with private fields, defensive copying, and proper equals/hashCode.
 
 **Human decision:**
-- ✅ Accepted full class implementations
+- ✅ Accepted full class implementations with no-arg + parameterized constructors
 - ✅ Adjusted constructors to initialize empty collections to avoid null
 - ✅ Added addHero()/removeHero() convenience methods to Player
-- (To be expanded in subsequent prompts)
+- ✅ Added level/winRate validation (level 1-30, winRate 0-100)
+- ✅ All collection getters return defensive copies
+- ✅ toCSVString() uses ID-based references for object relationships
 
 **Related commits:**
 - 9dc43e2 initial project structure and OOP class design
+- 7eac0a6 add Persistable interface and CSV serialization
+- 2e24300 add level/winRate validation and cleanup
 
 ---
 

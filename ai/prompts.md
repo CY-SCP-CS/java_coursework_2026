@@ -164,80 +164,45 @@ AI 提出了以下接口和枚举设计方案：
 
 ## Prompt 03 — Implementation Agent: 模型类实现
 
-**时间**: 2026-06-（待填写）
+**时间**: 2026-06-03 14:25
 **工具/模型**: Claude Code (deepseek-v4-flash)
 **Agent 角色**: Implementation Agent
-**相关提交**: （待填写）
+**相关提交**: 9dc43e2
 
 ### 我的 Prompt
 
 ```
 请实现以下 Java 模型类。要求：
-- 所有字段 private
-- 提供 getter/setter（注意不变对象的处理）
-- 有参构造方法 + 无参构造方法
-- 合理的 toString()
-- 必要的 equals() 和 hashCode()
-
-类清单：
-1. Person (abstract)
-   - id: String, name: String, role: Role
-   - 抽象方法: getDescription(): String
-
-2. Role 枚举: ADMIN, PLAYER
-
-3. Player extends Person
-   - teamId: String
-   - level: int (1-30)
-   - winRate: double (0.0-100.0)
-   - ownedHeroes: List<Hero>
-   - ownedHeroes 用 ArrayList 初始化，getter 返回防御性拷贝
-
-4. Admin extends Person
-   - adminLevel: int
-   - 不需要额外复杂字段
-
-5. Team
-   - teamId: String, name: String
-   - members: List<Player>
-   - 方法: addMember(), removeMember(), getAverageLevel(), getWinRate()
-
-6. HeroType 枚举: WARRIOR, MAGE, ASSASSIN, TANK, MARKSMAN, SUPPORT, JUNGLER
-
-7. Hero
-   - heroId: String, name: String
-   - heroType: HeroType
-   - baseStats: Map<String, Integer> (如 "hp", "attack", "defense")
-   - compatibleEquipment: List<Equipment>
-
-8. EquipmentType 枚举: OFFENSIVE, DEFENSIVE, MOVEMENT, MAGIC, JUNGLE
-
-9. Equipment
-   - equipmentId: String, name: String
-   - equipmentType: EquipmentType
-   - stats: Map<String, Integer> (提供的属性加成)
-   - usageCount: int
-
-10. MatchResult 枚举: WIN, LOSE, DRAW
-
-11. MatchRecord
-    - matchId: String
-    - date: LocalDate
-    - teamA: String (战队 ID)
-    - teamB: String (战队 ID)
-    - result: MatchResult
-    - heroPicks: List<String> (使用的英雄 ID 列表)
-
-请生成上述所有类的完整代码，每个类一个独立文件。
+（见前文 ...）
 ```
 
 ### AI 响应摘要
 
-（待填写）
+AI 生成了全部 11 个模型类/枚举的完整实现代码：
+
+**模型类：**
+1. `Person (abstract)` — id, name, role (Role枚举), getDescription() 抽象方法
+2. `Player extends Person implements Persistable` — teamId, level(1-30), winRate(0-100), ownedHeroes 防御性拷贝
+3. `Admin extends Person` — adminLevel, getDescription() 返回管理员信息
+4. `Team implements Reportable, Persistable` — members 聚合 Player，含 getAverageLevel(), getWinRate(), getTopPlayer()
+5. `Hero implements Reportable, Persistable` — baseStats(Map), compatibleEquipment(List), getStat(key) 便捷方法
+6. `Equipment implements Reportable, Persistable` — stats(Map), usageCount, incrementUsage()
+7. `MatchRecord implements Reportable, Persistable` — LocalDate, teamA/B 用 String ID 引用
+
+**接口：** Searchable<T>, Reportable, Persistable（后两个在 Prompt 02 中增加）
+
+**枚举：** Role(ADMIN/PLAYER), HeroType(7种), EquipmentType(5种), MatchResult(WIN/LOSE/DRAW)
 
 ### 我的决定
 
-（待填写）
+**全部接受**，并做了以下增强：
+- ✅ 所有类均实现无参 + 有参构造方法，集合字段在无参构造中初始化为空集合
+- ✅ Player 的 getOwnedHeroes() 使用防御性拷贝返回 new ArrayList<>(ownedHeroes)
+- ✅ Player 的 addHero()/removeHero() 便捷方法，避免直接操作集合引用
+- ✅ Team 的 getMembers() 也采用防御性拷贝
+- ✅ 所有实体类基于 ID 字段重写 equals() + hashCode()
+- ✅ Persistable.toCSVString() 使用 ID 引用代替对象序列化（如 ownedHeroes 存 heroId 列表）
+- ✅ 后续添加了 level/winRate 的 setter 校验（level 1-30, winRate 0-100）
 
 ---
 
@@ -1038,7 +1003,7 @@ AI 提出了以下接口和枚举设计方案：
 |---|------|-----------|------|------|
 | 01 | 2026-06-03 | Architect Agent | 初始类设计 | ✅ 已完成 |
 | 02 | 2026-06-03 | Architect Agent | 接口与枚举设计 | ✅ 已完成 |
-| 03 | 2026-06- | Implementation Agent | 模型类实现 | 待完成 |
+| 03 | 2026-06-03 | Implementation Agent | 模型类实现 | ✅ 已完成 |
 | 04 | 2026-06- | Implementation Agent | 数据初始化 | 待完成 |
 | 05 | 2026-06- | Implementation Agent | 菜单系统与输入工具 | 待完成 |
 | 06 | 2026-06- | Implementation Agent | 认证服务 | 待完成 |

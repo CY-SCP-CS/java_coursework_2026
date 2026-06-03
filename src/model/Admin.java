@@ -1,8 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 管理员类
  * 继承 Person，拥有数据管理权限

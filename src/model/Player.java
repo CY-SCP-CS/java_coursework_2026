@@ -43,6 +43,9 @@ public class Player extends Person implements Persistable {
     }
 
     public void setLevel(int level) {
+        if (level < 1 || level > 30) {
+            throw new IllegalArgumentException("Level must be between 1 and 30, got: " + level);
+        }
         this.level = level;
     }
 
@@ -51,6 +54,9 @@ public class Player extends Person implements Persistable {
     }
 
     public void setWinRate(double winRate) {
+        if (winRate < 0.0 || winRate > 100.0) {
+            throw new IllegalArgumentException("Win rate must be between 0.0 and 100.0, got: " + winRate);
+        }
         this.winRate = winRate;
     }
 
