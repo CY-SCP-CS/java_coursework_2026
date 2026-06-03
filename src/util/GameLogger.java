@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * 四级分层日志工具
@@ -99,7 +100,7 @@ public class GameLogger {
         String stackTrace = Arrays.stream(e.getStackTrace())
                 .limit(10)
                 .map(StackTraceElement::toString)
-                .collect(java.util.stream.Collectors.joining("\n  "));
+                .collect(Collectors.joining("\n  "));
         log(Level.ERROR, source, message + " | " + e.getClass().getSimpleName()
                 + ": " + (e.getMessage() != null ? e.getMessage() : "null")
                 + "\n  StackTrace (top 10):\n  " + stackTrace);
@@ -170,7 +171,8 @@ public class GameLogger {
         StringBuilder errorDetails = new StringBuilder();
         StringBuilder warnDetails = new StringBuilder();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                new FileInputStream(file), StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.contains("[ERROR]")) {

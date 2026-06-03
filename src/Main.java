@@ -329,19 +329,19 @@ public class Main {
         System.out.println("2. Rank by Hero Count");
         int choice = InputHelper.readIntRange("Choose: ", 1, 2);
 
-        Map<String, Integer> heroCount = new HashMap<>();
         List<Equipment> ranking;
+        Map<String, Integer> heroCount = new HashMap<>();
         if (choice == 1) {
             ranking = rankingService.getEquipmentRankingByUsage();
             System.out.println("\n=== Equipment Ranking by Usage ===");
         } else {
-            ranking = rankingService.getEquipmentRankingByHeroCount();
-            // Build map for metric display
+            // Build hero count map once
             for (Hero hero : dataManager.getAllHeroes()) {
                 for (Equipment eq : hero.getCompatibleEquipment()) {
                     heroCount.merge(eq.getEquipmentId(), 1, Integer::sum);
                 }
             }
+            ranking = rankingService.getEquipmentRankingByHeroCount(heroCount);
             System.out.println("\n=== Equipment Ranking by Compatible Hero Count ===");
         }
 

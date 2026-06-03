@@ -57,7 +57,8 @@ public class Team implements Reportable, Persistable {
      */
     public void addMember(Player player) {
         if (members.size() >= MAX_MEMBERS) {
-            throw new IllegalStateException("Team is full (max " + MAX_MEMBERS + " members)");
+            throw new IllegalStateException(
+                    "Team is full: " + members.size() + " / " + MAX_MEMBERS + " members");
         }
         if (player != null && !members.contains(player)) {
             this.members.add(player);

@@ -1,7 +1,6 @@
 package service;
 
 import model.*;
-import util.GameLogger;
 
 import java.util.*;
 import java.util.stream.Collectors;
