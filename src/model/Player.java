@@ -1,7 +1,6 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -14,10 +13,12 @@ public class Player extends Person implements Persistable {
     private int level;        // 1-30
     private double winRate;   // 0.0-100.0
     private List<Hero> ownedHeroes;
+    private Map<String, List<String>> equippedItemIds; // heroId -> equipped equipment IDs
 
     public Player() {
         super();
         this.ownedHeroes = new ArrayList<>();
+        this.equippedItemIds = new HashMap<>();
     }
 
     public Player(String id, String name, String teamId, int level, double winRate) {
@@ -26,6 +27,7 @@ public class Player extends Person implements Persistable {
         this.level = level;
         this.winRate = winRate;
         this.ownedHeroes = new ArrayList<>();
+        this.equippedItemIds = new HashMap<>();
     }
 
     // === Getters and Setters ===
@@ -87,7 +89,36 @@ public class Player extends Person implements Persistable {
      * 从玩家移除一个英雄
      */
     public boolean removeHero(String heroId) {
+        equippedItemIds.remove(heroId);
         return ownedHeroes.removeIf(h -> h.getHeroId().equals(heroId));
+    }
+
+    // === Equipped Items Management ===
+
+    /**
+     * 为指定英雄装备一件物品
+     */
+    public void equipItem(String heroId, String equipmentId) {
+        equippedItemIds.computeIfAbsent(heroId, k -> new ArrayList<>()).add(equipmentId);
+    }
+
+    /**
+     * 获取指定英雄已装备的物品 ID 列表
+     */
+    public List<String> getEquippedItems(String heroId) {
+        List<String> items = equippedItemIds.get(heroId);
+        return items == null ? new ArrayList<>() : new ArrayList<>(items);
+    }
+
+    /**
+     * 获取所有已装备映射（heroId -> equipmentId列表）
+     */
+    public Map<String, List<String>> getAllEquippedItems() {
+        Map<String, List<String>> copy = new HashMap<>();
+        for (Map.Entry<String, List<String>> entry : equippedItemIds.entrySet()) {
+            copy.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
+        return copy;
     }
 
     @Override
@@ -125,7 +156,12 @@ public class Player extends Person implements Persistable {
         sb.append("Win Rate: ").append(winRate).append("%\n");
         sb.append("Owned Heroes (").append(ownedHeroes.size()).append("):\n");
         for (Hero hero : ownedHeroes) {
-            sb.append("  - ").append(hero.getName()).append(" (").append(hero.getHeroType()).append(")\n");
+            sb.append("  - ").append(hero.getName()).append(" (").append(hero.getHeroType()).append(")");
+            List<String> equipped = getEquippedItems(hero.getHeroId());
+            if (!equipped.isEmpty()) {
+                sb.append(" [装备: ").append(String.join(", ", equipped)).append("]");
+            }
+            sb.append("\n");
         }
         return sb.toString();
     }

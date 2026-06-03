@@ -20,7 +20,22 @@ public class Main {
 
         System.out.println("=== Honor of Kings IMS ===");
         System.out.println("Welcome to the system!");
+        printDataSummary();
 
         // 菜单循环将在后续实现
+    }
+
+    /**
+     * 打印初始数据摘要用于验证
+     */
+    private static void printDataSummary() {
+        System.out.println("\n--- Data Summary ---");
+        System.out.println("Equipment: " + dataManager.getAllEquipment().size());
+        System.out.println("Heroes:    " + dataManager.getAllHeroes().size());
+        System.out.println("Players:   " + dataManager.getAllPlayers().size());
+        System.out.println("Teams:     " + dataManager.getAllTeams().size());
+        System.out.println("Matches:   " + dataManager.getAllMatchRecords().size());
+        System.out.println("Accounts:  admin / player1 / player2 ...");
+        System.out.println("--------------------\n");
     }
 }
