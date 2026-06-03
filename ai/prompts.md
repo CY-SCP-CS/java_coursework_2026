@@ -778,7 +778,74 @@ AI 建议了完整的类结构设计：
 
 ---
 
-## Prompt 13 — Documentation Agent: README 生成
+## Prompt 13 — Code Review Agent: 代码风格与高内聚低耦合审查
+
+**时间**: 2026-06-（待填写）
+**工具/模型**: Claude Code (deepseek-v4-flash)
+**Agent 角色**: Code Review Agent
+**相关提交**: （待填写）
+
+### 我的 Prompt
+
+```
+请作为 Code Review Agent，对以下 Java 代码进行**代码质量审查**。
+
+审查重点：
+
+### 1. 代码风格 (Code Style)
+- 命名规范：类名 PascalCase，方法/变量名 camelCase，常量 UPPER_SNAKE_CASE
+- 缩进和空格是否一致
+- 是否有过长的方法（超过 30 行应该考虑拆分）
+- 是否有过深的嵌套（超过 3 层应该考虑提取方法）
+- 是否有 magic number / magic string 未定义为常量
+- Javadoc 注释是否完整（所有 public 方法需要有 @param @return 注释）
+
+### 2. 高内聚 (High Cohesion)
+- 每个类的职责是否单一？一个类是否做了太多不相关的事情？
+- 类中的方法是否都围绕同一核心职责？
+- 是否有可以提取到独立类中的功能簇？
+
+### 3. 低耦合 (Low Coupling)
+- 类之间的依赖关系是否合理？
+- 是否过度依赖具体实现而不是接口/抽象类？
+- 是否存在循环依赖？（A -> B -> A）
+- 是否可以直接访问其他类的内部数据（破坏封装）？
+
+### 4. 设计原则 (SOLID)
+- 单一职责原则：每个类/方法是否只有一个改变理由
+- 开闭原则：是否对扩展开放、对修改封闭
+- 里氏替换：子类是否能完全替代父类
+- 接口隔离：接口是否足够小和专一
+- 依赖倒置：是否依赖抽象而非具体实现
+
+请针对 src/ 目录下的代码，给出：
+1. 整体评价（评分 1-10）
+2. 每个问题定位到具体文件:行号
+3. 每个问题的严重程度（critical / major / minor）
+4. 每个问题的具体改进建议
+5. 重构优先级排序
+
+格式要求：
+```markdown
+## [严重程度] 问题描述
+- **文件**: src/model/Xxx.java
+- **行号**: 25-30
+- **问题**: ...
+- **建议**: ...
+```
+```
+
+### AI 响应摘要
+
+（待填写）
+
+### 我的决定
+
+（待填写）
+
+---
+
+## Prompt 14 — Documentation Agent: README 生成
 
 **时间**: 2026-06-（待填写）
 **工具/模型**: Claude Code (deepseek-v4-flash)
@@ -847,7 +914,7 @@ AI 建议了完整的类结构设计：
 
 ---
 
-## Prompt 14 — Fix/Refactor Agent: Bug 修复
+## Prompt 15 — Fix/Refactor Agent: Bug 修复
 
 **时间**: 2026-06-（待填写）
 **工具/模型**: Claude Code (deepseek-v4-flash)
@@ -896,5 +963,6 @@ AI 建议了完整的类结构设计：
 | 10 | 2026-06- | Implementation Agent | 文件持久化 | 待完成 |
 | 11 | 2026-06- | Testing/Reviewer Agent | 整体代码审查 | 待完成 |
 | 12 | 2026-06- | Testing/Reviewer Agent | 测试用例生成 | 待完成 |
-| 13 | 2026-06- | Documentation Agent | README 生成 | 待完成 |
-| 14 | 2026-06- | Fix Agent | Bug 修复 | 待完成 |
+| 13 | 2026-06- | Code Review Agent | 代码风格与高内聚低耦合审查 | 待完成 |
+| 14 | 2026-06- | Documentation Agent | README 生成 | 待完成 |
+| 15 | 2026-06- | Fix Agent | Bug 修复 | 待完成 |
