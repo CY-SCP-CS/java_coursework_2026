@@ -92,12 +92,14 @@ public class GameLogger {
     }
 
     public static void error(String source, String message, Throwable e) {
-        String stackTrace = (e != null)
-                ? String.join("\n  ", Arrays.stream(e.getStackTrace())
-                        .limit(10)
-                        .map(StackTraceElement::toString)
-                        .toArray(String[]::new))
-                : "(no exception)";
+        if (e == null) {
+            log(Level.ERROR, source, message + " | (no exception)");
+            return;
+        }
+        String stackTrace = Arrays.stream(e.getStackTrace())
+                .limit(10)
+                .map(StackTraceElement::toString)
+                .collect(java.util.stream.Collectors.joining("\n  "));
         log(Level.ERROR, source, message + " | " + e.getClass().getSimpleName()
                 + ": " + (e.getMessage() != null ? e.getMessage() : "null")
                 + "\n  StackTrace (top 10):\n  " + stackTrace);

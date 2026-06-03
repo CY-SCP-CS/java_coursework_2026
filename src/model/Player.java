@@ -24,8 +24,8 @@ public class Player extends Person implements Persistable {
     public Player(String id, String name, String teamId, int level, double winRate) {
         super(id, name, Role.PLAYER);
         this.teamId = teamId;
-        this.level = level;
-        this.winRate = winRate;
+        setLevel(level);
+        setWinRate(winRate);
         this.ownedHeroes = new ArrayList<>();
         this.equippedItemIds = new HashMap<>();
     }
