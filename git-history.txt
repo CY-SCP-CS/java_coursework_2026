@@ -1,0 +1,23 @@
+* 2f0397a (HEAD -> main, origin/main, origin/HEAD) [Docs] Prompt 14 (README) + Prompt 16 (prompt optimization) records
+* a027047 [Docs] Prompt 14 — comprehensive README with project structure, features, tests
+* 2ce158e [AI-Review] fix 5 code review issues: charset, imports, map rebuild, error message
+* d116d6b [Docs] record Prompt 11 (architect review) and Prompt 12 (test suite) results
+* 990ff11 [AI-Implementation] implement test suite (179 tests, Prompt 12) + fix validation bugs
+* 1a07c73 [AI-Implementation] fix all code quality issues from architect review
+* c081347 [AI-Architect] comprehensive code review: identify 10 issues across 22 files
+* c2aa9aa [Human] implement Prompt 10 — file persistence with CSV save/load
+* 513f78f [Human] fix code review issues, enhance services (Prompts 06-09), update docs
+* 790e393 [AI-Review] code review: menu system and input toolkit (8/10)
+* d19ba8a [Human] implement menu system, input toolkit, and 4-level logger
+* c5be625 [AI-Review] review DataInitializer: data completeness verified 9/10
+* ceb0811 [Docs] update Prompt 04 execution log and agent-log.md
+* cdbc433 [Human] implement data initialization with 15 heroes 20 equipment 15 players
+* 9f105de [AI-Review] code review: fix CSV separator ambiguity and import style
+* 39649b7 [AI-Implementation] implement model classes with validation
+* 2b9897e [Docs] fix commit hash references for Prompt 02
+* 7eac0a6 [AI-Architect] add Persistable interface and CSV serialization
+* f2aec76 [Docs] mark Prompt 01 as completed in summary table
+* 8400468 [Docs] add Code Review Agent (code style, cohesion, coupling)
+* 5cfb646 [Docs] update prompts.md with Prompt 01 execution log
+* 9dc43e2 [Human] create initial project structure and OOP class design
+* 37da354 Initial commit
