@@ -8,17 +8,21 @@
 ## Architect Agent
 
 **Main contribution:**
-Suggested the initial OOP class structure: Person (abstract), Player, Admin, Hero, Equipment, Team, MatchRecord. Recommended interfaces (Searchable, Reportable) and package structure (model, service, util). Emphasized encapsulation with private fields and defensive copying.
+Suggested the initial OOP class structure: Person (abstract), Player, Admin, Hero, Equipment, Team, MatchRecord. Recommended interfaces (Searchable, Reportable, Persistable) and package structure (model, service, util). Designed 4 enums (Role, HeroType, EquipmentType, MatchResult).
 
 **Human decision:**
 - ✅ Accepted abstract Person class design with Role enum
 - ✅ Accepted Searchable<T> generic interface
 - ✅ Added Reportable interface for formatted display
+- ✅ Added Persistable interface with toCSVString()/fromCSVString()
 - ✅ Used defensive copying in all collection getters
 - ✅ Added equals()/hashCode() based on ID fields
+- ✅ All 4 enums created with full constant sets
+- ✅ Each entity class has both no-arg and parameterized constructors
 
 **Related commits:**
 - 9dc43e2 initial project structure and OOP class design
+- e5579b7 add Persistable interface and CSV serialization
 
 ---
 
@@ -42,6 +46,19 @@ Implemented all 7 model classes, 4 enums, 2 interfaces, and service/util skeleto
 
 **Main contribution:**
 (Focus: code style elegance, high cohesion, low coupling)
+
+**Human decision:**
+(To be filled)
+
+**Related commits:**
+(To be filled)
+
+---
+
+## Prompt Optimization Agent
+
+**Main contribution:**
+(Reviews and improves prompts before sending to other agents, focusing on clarity, context, constraints, verifiability, and granularity.)
 
 **Human decision:**
 (To be filled)

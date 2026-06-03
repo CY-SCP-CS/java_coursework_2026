@@ -4,12 +4,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 比赛记录类
  * 表示一场比赛的结果、参与者和英雄选择
  */
-public class MatchRecord implements Reportable {
+public class MatchRecord implements Reportable, Persistable {
     private String matchId;
     private LocalDate date;
     private String teamA;              // 战队 A 的 ID
@@ -102,6 +103,20 @@ public class MatchRecord implements Reportable {
     @Override
     public int hashCode() {
         return Objects.hash(matchId);
+    }
+
+    // === Persistable ===
+
+    @Override
+    public String toCSVString() {
+        // format: matchId,date,teamA,teamB,result,heroId1|heroId2|...
+        String picks = String.join("|", heroPicks);
+        return matchId + "," + date + "," + teamA + "," + teamB + "," + result + "," + picks;
+    }
+
+    @Override
+    public void fromCSVString(String csvLine) {
+        // to be implemented in FileStorageService stage
     }
 
     @Override

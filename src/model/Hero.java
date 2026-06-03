@@ -1,13 +1,14 @@
 package model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 英雄类
  * 代表一个可玩英雄，包含类型、属性和装备兼容性
  * 关联：Hero 可使用多个 Equipment 对象
  */
-public class Hero implements Reportable {
+public class Hero implements Reportable, Persistable {
     private String heroId;
     private String name;
     private HeroType heroType;
@@ -105,6 +106,26 @@ public class Hero implements Reportable {
     @Override
     public int hashCode() {
         return Objects.hash(heroId);
+    }
+
+    // === Persistable ===
+
+    @Override
+    public String toCSVString() {
+        // format: heroId,name,heroType,hp:attack:defense,equipId1|equipId2|...
+        String statsStr = baseStats.entrySet().stream()
+                .map(e -> e.getKey() + ":" + e.getValue())
+                .collect(Collectors.joining(":"));
+        String equipIds = compatibleEquipment.stream()
+                .map(Equipment::getEquipmentId)
+                .collect(Collectors.joining("|"));
+        return heroId + "," + name + "," + heroType + "," +
+               statsStr + "," + equipIds;
+    }
+
+    @Override
+    public void fromCSVString(String csvLine) {
+        // to be implemented in FileStorageService stage
     }
 
     @Override

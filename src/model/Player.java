@@ -2,13 +2,14 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 玩家类
  * 继承 Person，代表一名游戏玩家
  * 关联：Player 拥有多个 Hero 对象
  */
-public class Player extends Person {
+public class Player extends Person implements Persistable {
     private String teamId;
     private int level;        // 1-30
     private double winRate;   // 0.0-100.0
@@ -86,6 +87,25 @@ public class Player extends Person {
     @Override
     public String getDescription() {
         return "Player: " + getName() + " (Level " + level + ", Win Rate " + winRate + "%)";
+    }
+
+    // === Persistable ===
+
+    @Override
+    public String toCSVString() {
+        // format: id,name,teamId,level,winRate,heroId1|heroId2|...
+        String heroIds = ownedHeroes.stream()
+                .map(Hero::getHeroId)
+                .collect(Collectors.joining("|"));
+        return getId() + "," + getName() + "," +
+               (teamId != null ? teamId : "") + "," +
+               level + "," + winRate + "," +
+               heroIds;
+    }
+
+    @Override
+    public void fromCSVString(String csvLine) {
+        // to be implemented in FileStorageService stage
     }
 
     @Override

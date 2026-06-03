@@ -2,12 +2,13 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 战队类
  * 包含多个 Player 对象（聚合关系）
  */
-public class Team implements Reportable {
+public class Team implements Reportable, Persistable {
     private String teamId;
     private String name;
     private List<Player> members;   // 聚合：Team 包含多个 Player
@@ -122,6 +123,22 @@ public class Team implements Reportable {
     @Override
     public int hashCode() {
         return java.util.Objects.hash(teamId);
+    }
+
+    // === Persistable ===
+
+    @Override
+    public String toCSVString() {
+        // format: teamId,name,playerId1|playerId2|...
+        String memberIds = members.stream()
+                .map(Player::getId)
+                .collect(Collectors.joining("|"));
+        return teamId + "," + name + "," + memberIds;
+    }
+
+    @Override
+    public void fromCSVString(String csvLine) {
+        // to be implemented in FileStorageService stage
     }
 
     @Override

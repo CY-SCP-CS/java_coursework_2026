@@ -6,7 +6,7 @@ import java.util.*;
  * 装备类
  * 代表英雄可以装备的物品
  */
-public class Equipment implements Reportable {
+public class Equipment implements Reportable, Persistable {
     private String equipmentId;
     private String name;
     private EquipmentType equipmentType;
@@ -110,6 +110,30 @@ public class Equipment implements Reportable {
             sb.append("  +").append(entry.getValue()).append(" ").append(entry.getKey()).append("\n");
         }
         return sb.toString();
+    }
+
+    // === Persistable ===
+
+    @Override
+    public String toCSVString() {
+        // format: equipmentId,name,equipmentType,statKey:statValue|...,usageCount
+        StringBuilder sb = new StringBuilder();
+        sb.append(equipmentId).append(",");
+        sb.append(name).append(",");
+        sb.append(equipmentType).append(",");
+        // serialize stats map
+        List<String> statPairs = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+            statPairs.add(entry.getKey() + ":" + entry.getValue());
+        }
+        sb.append(String.join("|", statPairs)).append(",");
+        sb.append(usageCount);
+        return sb.toString();
+    }
+
+    @Override
+    public void fromCSVString(String csvLine) {
+        // to be implemented in FileStorageService stage
     }
 
     @Override

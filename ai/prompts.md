@@ -98,10 +98,10 @@ AI 建议了完整的类结构设计：
 
 ## Prompt 02 — Architect Agent: 接口与枚举设计
 
-**时间**: 2026-06-03
+**时间**: 2026-06-03 14:40
 **工具/模型**: Claude Code (deepseek-v4-flash)
 **Agent 角色**: Architect Agent
-**相关提交**: （待填写）
+**相关提交**: e5579b7
 
 ### 我的 Prompt
 
@@ -129,11 +129,36 @@ AI 建议了完整的类结构设计：
 
 ### AI 响应摘要
 
-（待填写）
+AI 提出了以下接口和枚举设计方案：
+
+**接口设计：**
+1. `Searchable<T>` — `searchById(String id): T`, `searchByName(String name): List<T>`
+2. `Persistable` — `toCSVString(): String`, `fromCSVString(String csvLine): void`
+3. `Reportable` — `getInfo(): String`
+
+**枚举常量：**
+1. `Role`: ADMIN, PLAYER
+2. `HeroType`: WARRIOR, MAGE, ASSASSIN, TANK, MARKSMAN, SUPPORT, JUNGLER
+3. `EquipmentType`: OFFENSIVE, DEFENSIVE, MOVEMENT, MAGIC, JUNGLE
+4. `MatchResult`: WIN, LOSE, DRAW
+
+**构造方法建议：**
+- 每个类提供无参构造 + 全参构造（ID 必填）
+- 集合字段在无参构造中初始化为空集合
+
+**equals/hashCode 建议：**
+- 所有实体类基于 ID 字段重写 equals() 和 hashCode()
+- 使用 Objects.equals() 和 Objects.hash() 工具方法
 
 ### 我的决定
 
-（待填写）
+**全部接受**，并做了以下实施：
+- ✅ `Searchable<T>` — 泛型接口，searchById 返回 T，searchByName 返回 List<T>
+- ✅ `Reportable` — getInfo() 返回格式化字符串，所有模型类均已实现
+- ✅ `Persistable` — toCSVString() 已实现（含 stats map 序列化、集合 ID 引用），fromCSVString 留待 FileStorageService 阶段
+- ✅ 4 个枚举均已创建，覆盖所有需求常量
+- ✅ 每个类均有无参 + 有参构造方法，集合字段预初始化为空集合
+- ✅ 所有实体类基于 ID 重写 equals() 和 hashCode()
 
 ---
 
@@ -947,12 +972,72 @@ AI 建议了完整的类结构设计：
 
 ---
 
+## Prompt 16 — Prompt Optimization Agent: Prompt 质量优化
+
+**时间**: 2026-06-（待填写）
+**工具/模型**: Claude Code (deepseek-v4-flash)
+**Agent 角色**: Prompt Optimization Agent
+**相关提交**: （待填写）
+
+### 我的 Prompt
+
+```
+请作为 Prompt Optimization Agent，对以下我准备发给 AI 的 prompt 进行审查和优化。
+
+我的原始 prompt：
+```
+[粘贴原始 prompt]
+```
+
+请从以下维度分析和优化：
+
+### 1. 清晰度 (Clarity)
+- 目标是否明确？AI 是否知道要输出什么？
+- 是否有模糊的表述需要具体化？
+- 是否指定了输出格式？（代码/解释/设计/建议）
+
+### 2. 上下文 (Context)
+- 是否提供了足够的背景信息？
+- 是否给出了相关代码或现有类结构？
+- 是否说明了当前开发阶段？
+
+### 3. 约束 (Constraints)
+- 是否明确了限制条件？（不要写什么、不要用什么技术）
+- 是否指定了 Java 版本、包名等？
+- 是否要求 AI 说明假设和边界情况？
+
+### 4. 可验证性 (Verifiability)
+- 能否判断 AI 的输出是否正确？
+- 是否要求 AI 解释而不是只给代码？
+- 是否要求 AI 指出不确定的地方？
+
+### 5. 分步 (Granularity)
+- 是否一次只请求一个功能/任务？
+- 是否可以将 prompt 拆分为更小的子任务？
+
+请输出：
+1. 原始 prompt 评分（每维度 1-10 分）
+2. 各维度主要问题
+3. 优化后的 prompt 版本
+4. 优化说明
+```
+
+### AI 响应摘要
+
+（待填写）
+
+### 我的决定
+
+（待填写）
+
+---
+
 ## Prompt 使用记录汇总
 
 | # | 日期 | Agent 角色 | 目的 | 状态 |
 |---|------|-----------|------|------|
 | 01 | 2026-06-03 | Architect Agent | 初始类设计 | ✅ 已完成 |
-| 02 | 2026-06- | Architect Agent | 接口与枚举设计 | 待完成 |
+| 02 | 2026-06-03 | Architect Agent | 接口与枚举设计 | ✅ 已完成 |
 | 03 | 2026-06- | Implementation Agent | 模型类实现 | 待完成 |
 | 04 | 2026-06- | Implementation Agent | 数据初始化 | 待完成 |
 | 05 | 2026-06- | Implementation Agent | 菜单系统与输入工具 | 待完成 |
@@ -966,3 +1051,4 @@ AI 建议了完整的类结构设计：
 | 13 | 2026-06- | Code Review Agent | 代码风格与高内聚低耦合审查 | 待完成 |
 | 14 | 2026-06- | Documentation Agent | README 生成 | 待完成 |
 | 15 | 2026-06- | Fix Agent | Bug 修复 | 待完成 |
+| 16 | 2026-06- | Prompt Optimization Agent | Prompt 质量审查与优化 | 待完成 |
