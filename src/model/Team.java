@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
  * 包含多个 Player 对象（聚合关系）
  */
 public class Team implements Reportable, Persistable {
+    private static final int MAX_MEMBERS = 5;
+
     private String teamId;
     private String name;
     private List<Player> members;   // 聚合：Team 包含多个 Player
@@ -54,9 +56,17 @@ public class Team implements Reportable, Persistable {
      * 添加队员
      */
     public void addMember(Player player) {
+        if (members.size() >= MAX_MEMBERS) {
+            throw new IllegalStateException("Team is full (max " + MAX_MEMBERS + " members)");
+        }
         if (player != null && !members.contains(player)) {
             this.members.add(player);
         }
+    }
+
+    /** 获取最大队员数 */
+    public static int getMaxMembers() {
+        return MAX_MEMBERS;
     }
 
     /**

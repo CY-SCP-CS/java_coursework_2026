@@ -42,6 +42,7 @@ public class Main {
     /** 保存所有数据到 CSV 文件 */
     private static void saveData() {
         fileStorage.saveAllData(dataManager);
+        GameLogger.info("Main", "Data saved to disk.");
         System.out.println("Data saved to disk.");
     }
 
@@ -334,17 +335,13 @@ public class Main {
             ranking = rankingService.getEquipmentRankingByUsage();
             System.out.println("\n=== Equipment Ranking by Usage ===");
         } else {
-            // Calculate hero count for each equipment
+            ranking = rankingService.getEquipmentRankingByHeroCount();
+            // Build map for metric display
             for (Hero hero : dataManager.getAllHeroes()) {
                 for (Equipment eq : hero.getCompatibleEquipment()) {
                     heroCount.merge(eq.getEquipmentId(), 1, Integer::sum);
                 }
             }
-            ranking = dataManager.getAllEquipment().stream()
-                    .sorted(Comparator.<Equipment, Integer>comparing(
-                            eq -> heroCount.getOrDefault(eq.getEquipmentId(), 0),
-                            Comparator.reverseOrder()))
-                    .collect(Collectors.toList());
             System.out.println("\n=== Equipment Ranking by Compatible Hero Count ===");
         }
 
@@ -388,9 +385,7 @@ public class Main {
                 InputHelper.pressEnterToContinue();
                 return;
             }
-            filtered = allMatches.stream()
-                    .filter(m -> m.getTeamA().equals(teamId) || m.getTeamB().equals(teamId))
-                    .collect(Collectors.toList());
+            filtered = filterMatchesByTeam(allMatches, teamId);
             System.out.println("\n=== Match History for " + player.getName() + " (Team: " + teamId + ") ===");
         } else {
             Team team = dataManager.getTeamById(id);
@@ -399,9 +394,7 @@ public class Main {
                 InputHelper.pressEnterToContinue();
                 return;
             }
-            filtered = allMatches.stream()
-                    .filter(m -> m.getTeamA().equals(id) || m.getTeamB().equals(id))
-                    .collect(Collectors.toList());
+            filtered = filterMatchesByTeam(allMatches, id);
             System.out.println("\n=== Match History for " + team.getName() + " ===");
         }
 
@@ -426,6 +419,13 @@ public class Main {
                     (wins + losses > 0) ? (double) wins / (wins + losses) * 100 : 0);
         }
         InputHelper.pressEnterToContinue();
+    }
+
+    /** 按战队ID过滤比赛记录 */
+    private static List<MatchRecord> filterMatchesByTeam(List<MatchRecord> allMatches, String teamId) {
+        return allMatches.stream()
+                .filter(m -> m.getTeamA().equals(teamId) || m.getTeamB().equals(teamId))
+                .collect(Collectors.toList());
     }
 
     // ========================================================================

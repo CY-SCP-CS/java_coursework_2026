@@ -1,6 +1,7 @@
 package util;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -139,7 +140,8 @@ public class GameLogger {
         }
 
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                new FileInputStream(file), StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
                 sb.append(line).append("\n");
@@ -169,10 +171,10 @@ public class GameLogger {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.startsWith("[ERROR]")) {
+                if (line.contains("[ERROR]")) {
                     errorCount++;
                     errorDetails.append("  ").append(line).append("\n");
-                } else if (line.startsWith("[WARN ]")) {
+                } else if (line.contains("[WARN ]")) {
                     warnCount++;
                     if (warnCount <= 5) { // Limit warning details
                         warnDetails.append("  ").append(line).append("\n");

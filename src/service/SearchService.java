@@ -137,9 +137,14 @@ public class SearchService {
         sb.append("Name: ").append(hero.getName()).append("\n");
         sb.append("Type: ").append(hero.getHeroType()).append("\n");
         sb.append("Base Stats:\n");
-        sb.append("  HP: ").append(hero.getStat("hp")).append("\n");
-        sb.append("  Attack: ").append(hero.getStat("attack")).append("\n");
-        sb.append("  Defense: ").append(hero.getStat("defense")).append("\n");
+        Map<String, Integer> stats = hero.getBaseStats();
+        if (stats.isEmpty()) {
+            sb.append("  (none)\n");
+        } else {
+            for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+                sb.append("  ").append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+            }
+        }
         sb.append("Compatible Equipment:\n");
         List<Equipment> eqList = hero.getCompatibleEquipment();
         if (eqList.isEmpty()) {

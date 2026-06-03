@@ -68,6 +68,20 @@ public class RankingService {
     /**
      * 按使用该装备的英雄数量降序排列
      */
+    public List<Equipment> getEquipmentRankingByHeroCount() {
+        // Build hero count map for each equipment
+        Map<String, Integer> heroCountMap = new HashMap<>();
+        for (Hero hero : dataManager.getAllHeroes()) {
+            for (Equipment eq : hero.getCompatibleEquipment()) {
+                heroCountMap.merge(eq.getEquipmentId(), 1, Integer::sum);
+            }
+        }
+        return getEquipmentRankingByHeroCount(heroCountMap);
+    }
+
+    /**
+     * 按使用该装备的英雄数量降序排列（使用外部 Map）
+     */
     public List<Equipment> getEquipmentRankingByHeroCount(Map<String, Integer> heroCountMap) {
         return dataManager.getAllEquipment().stream()
                 .sorted(Comparator.<Equipment, Integer>comparing(
