@@ -26,6 +26,33 @@ Suggested the initial OOP class structure: Person (abstract), Player, Admin, Her
 
 ---
 
+## Architect Agent (Prompt 11 — Comprehensive Code Review)
+
+**Main contribution:**
+Performed comprehensive review of all 22 Java source files. Identified 10 issues across design, code quality, and style categories. Established fix priorities.
+
+**Review date:** 2026-06-03
+
+**Findings summary:**
+
+| # | Severity | Category | Issue | File(s) | Fix |
+|---|----------|----------|-------|---------|-----|
+| 1 | Minor | Design | `fromCSVString()` empty stubs in all Persistable classes — interface contract not honored | Hero, Player, Equipment, Team, MatchRecord | Either implement or document as delegated to FileStorageService |
+| 2 | Minor | Design | `addEquip()` uses `Object...` varargs with unsafe casting | DataInitializer.java:77-78 | Add type checking or use overloaded methods |
+| 3 | Minor | Consistency | `readLogFile()` uses `FileReader` (default charset) while all other I/O uses UTF-8 | GameLogger.java:142 | Change to `InputStreamReader` with UTF-8 |
+| 4 | Trivial | Style | Unused import `java.util.InputMismatchException` | InputHelper.java:3 | Remove import |
+| 5 | Minor | Robustness | `analyzeLogs()` uses fragile string prefix matching `[ERROR]` / `[WARN ]` | GameLogger.java:172-175 | Change to `contains()` or level-based matching |
+| 6 | Minor | Flexibility | `displayHeroDetail()` hard-codes HP/Attack/Defense instead of iterating full stat map | SearchService.java:140-142 | Iterate over all stats |
+| 7 | Minor | DRY | `handleMatchHistory()` duplicates same stream filter logic for players and teams | Main.java:391-406 | Extract common filtering method |
+| 8 | Trivial | Design | Team has no max member capacity validation | Team.java | Add capacity check in addMember() |
+| 9 | Minor | Design | `getEquipmentRankingByHeroCount()` requires external map — caller duplicates ranking logic | RankingService.java + Main.java | Move heroCount calculation into service |
+| 10 | Trivial | Style | Main.java doesn't use GameLogger at all | Main.java | Consider adding operation logging |
+
+**Related commits:**
+- (To be filled after fix implementation)
+
+---
+
 ## Implementation Agent
 
 **Main contribution:**
@@ -208,7 +235,7 @@ Fixed all Critical/Major issues found by Code Review Agent during the Prompt 05 
 - ✅ Program runs correctly after all fixes
 
 **Related commits:**
-- (Pending — current session commit)
+- c2aa9aa [Human] implement Prompt 10 — file persistence with CSV save/load
 
 ---
 
@@ -235,7 +262,7 @@ Implemented full `FileStorageService.java` (~280 lines) with CSV persistence for
 - ✅ Robust per-line error skipping
 
 **Related commits:**
-- (Pending — current session commit)
+- c2aa9aa [Human] implement Prompt 10 — file persistence with CSV save/load
 
 ---
 
