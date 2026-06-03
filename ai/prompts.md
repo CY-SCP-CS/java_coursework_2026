@@ -488,7 +488,7 @@ AI 生成了完整的输入工具类和菜单系统：
 **时间**: 2026-06-03
 **工具/模型**: Claude Code (deepseek-v4-flash)
 **Agent 角色**: Architect Agent → Testing/Reviewer Agent
-**相关提交**: （待生成）
+**相关提交**: c081347, 1a07c73
 
 ### 我在 CLI 输入的 Prompt
 
@@ -516,10 +516,76 @@ AI 生成了完整的输入工具类和菜单系统：
 - Main.java 未使用 GameLogger
 - Team.addMember() 缺少容量上限检查
 
+**修复内容：**
+| # | 修复 | 文件 |
+|---|------|------|
+| 1 | 移除未使用的 import | InputHelper.java |
+| 2 | readLogFile() 改为 UTF-8 | GameLogger.java |
+| 3 | analyzeLogs() 改用 contains() | GameLogger.java |
+| 4 | displayHeroDetail() 遍历全部属性 | SearchService.java |
+| 5 | 新增无参 getEquipmentRankingByHeroCount() | RankingService.java |
+| 6 | 提取 filterMatchesByTeam() 公共方法 | Main.java |
+| 7 | 添加 MAX_MEMBERS 容量检查 | Team.java |
+| 8 | 添加 GameLogger 日志记录 | Main.java |
+
 ### 我的决定
 
 - ✅ 接受全部审查结果，按优先级修复
 - ✅ 所有修复完成后进行代码风格复审
+
+---
+
+## Prompt 12 — Testing/Reviewer Agent: 测试用例生成
+
+**时间**: 2026-06-03
+**工具/模型**: Claude Code (deepseek-v4-flash)
+**Agent 角色**: Testing/Reviewer Agent
+**相关提交**: 990ff11
+
+### 我在 CLI 输入的 Prompt
+
+```
+实现Prompt 11和12，在过程中实现[AI-Implementation]和[AI-Architect]的提交，并且调用review agent检查、优化我的代码风格
+```
+
+### AI 响应摘要
+
+创建了完整的 JUnit 5 测试套件，共 179 个测试用例，覆盖 13 个测试类：
+
+**模型层测试（6 类）：**
+| 测试类 | 测试数 | 覆盖内容 |
+|--------|--------|----------|
+| PlayerTest | 30 | 构造/边界验证、添加/移除英雄、装备管理、防御性拷贝、equals/hashCode、CSV |
+| TeamTest | 18 | 队员增删、容量上限(MAX_MEMBERS=5)、平均等级/胜率、最佳队员、防御性拷贝 |
+| HeroEquipmentTest | 18 | Hero/Equipment 构造、属性管理、防御性拷贝、兼容装备、equals/hashCode |
+| MatchRecordTest | 12 | 比赛记录构造、英雄选择、去重、MatchResult 枚举 |
+| AdminTest | 5 | 构造、权限描述 |
+| PersonTest | 8 | 多态、Role/HeroType/EquipmentType 枚举 |
+
+**数据层测试（1 类）：**
+| 测试类 | 测试数 | 覆盖内容 |
+|--------|--------|----------|
+| DataInitializerTest | 13 | 数据量验证(20/15/15/3/10)、管理员/密码、英雄≥3/战队5人、引用完整性 |
+
+**服务层测试（5 类）：**
+| 测试类 | 测试数 | 覆盖内容 |
+|--------|--------|----------|
+| AuthenticationServiceTest | 10 | 登录成功/失败/大小写/重复登录/登出 |
+| SearchServiceTest | 20 | ID/名称搜索、模糊匹配、不存在处理、详情展示、比赛历史 |
+| RankingServiceTest | 12 | 胜率/等级/场次/自定义评分排名、装备排名、平局处理 |
+| GameDataManagerTest | 20 | 全 CRUD、重复/不存在处理、防御性拷贝、findPersonById |
+| GameLoggerTest | 10 | 日志级别、文件输出、异常分析、空指针保护 |
+
+**测试发现的 Bug：**
+1. **Player 构造器绕过 setter**：`new Player(id, name, teamId, 0, 50.0)` 不会抛出 IllegalArgumentException，因为构造器直接赋值而非调用 setLevel()
+2. **GameLogger.error(null e) 空指针**：`error("src", "msg", null)` 在 `e.getClass().getSimpleName()` 处 NPE
+
+### 我的决定
+
+- ✅ 179 个测试全部通过
+- ✅ Player 构造器改为使用 setter（level 1-30, winRate 0-100 校验生效）
+- ✅ GameLogger.error(null exception) 提前返回，不再 NPE
+- ✅ 测试作为回归保障，后续修改必须通过全部测试
 
 ---
 
@@ -658,8 +724,8 @@ AI 生成了完整的输入工具类和菜单系统：
 | 08  | 2026-06-03 | Implementation Agent      | 排行榜与装备统计             | ✅ 已完成 |
 | 09  | 2026-06-03 | Implementation Agent      | 数据管理（增删改）            | ✅ 已完成 |
 | 10  | 2026-06-03 | Implementation Agent      | 文件持久化                | ✅ 已完成 |
-| 11  | 2026-06-   | Testing/Reviewer Agent    | 整体代码审查               | ⏳ 待完成 |
-| 12  | 2026-06-   | Testing/Reviewer Agent    | 测试用例生成               | ⏳ 待完成 |
+| 11  | 2026-06-03 | Architect Agent           | 整体代码审查               | ✅ 已完成 |
+| 12  | 2026-06-03 | Testing/Reviewer Agent    | 测试用例生成               | ✅ 已完成 |
 | 13  | 2026-06-03 | Code Review Agent         | 代码风格审查               | ✅ 已完成 |
 | 14  | 2026-06-   | Documentation Agent       | README 生成            | ⏳ 待完成 |
 | 15  | 2026-06-03 | Fix Agent                 | Bug 修复（代码风格问题）       | ✅ 已完成 |
