@@ -59,8 +59,9 @@ public class GameLogger {
     /** 启用文件日志输出到指定路径 */
     public static void enableFileLogging(String filePath) {
         try {
-            FileWriter fw = new FileWriter(filePath, true);
-            BufferedWriter bw = new BufferedWriter(fw);
+            FileOutputStream fos = new FileOutputStream(filePath, true);
+            OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+            BufferedWriter bw = new BufferedWriter(osw);
             fileWriter = new PrintWriter(bw, true); // autoFlush
             info("GameLogger", "File logging enabled: " + filePath);
         } catch (IOException e) {

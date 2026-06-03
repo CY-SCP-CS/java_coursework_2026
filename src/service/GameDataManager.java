@@ -44,7 +44,7 @@ public class GameDataManager {
     }
 
     public Collection<Player> getAllPlayers() {
-        return players.values();
+        return new ArrayList<>(players.values());
     }
 
     public void removePlayer(String playerId) {
@@ -89,7 +89,7 @@ public class GameDataManager {
     }
 
     public Collection<Hero> getAllHeroes() {
-        return heroes.values();
+        return new ArrayList<>(heroes.values());
     }
 
     public void removeHero(String heroId) {
@@ -119,7 +119,7 @@ public class GameDataManager {
     }
 
     public Collection<Equipment> getAllEquipment() {
-        return equipmentMap.values();
+        return new ArrayList<>(equipmentMap.values());
     }
 
     public void removeEquipment(String equipmentId) {
@@ -152,7 +152,7 @@ public class GameDataManager {
     }
 
     public Collection<Team> getAllTeams() {
-        return teams.values();
+        return new ArrayList<>(teams.values());
     }
 
     public void removeTeam(String teamId) {
