@@ -1,4 +1,6 @@
-* 6682b6e (HEAD -> main) [AI-Architect] final project audit: verify all assignment requirements
+* 91e9cd7 (HEAD -> main) [AI-Review] fix code review issues: charset, defensive copies, unused imports
+* 1edb49c [Docs] update git-history.txt with latest commits
+* 6682b6e [AI-Architect] final project audit: verify all assignment requirements
 * 1bc0052 [Docs] add design doc, test cases, reflection, git history
 * 2f0397a (origin/main, origin/HEAD) [Docs] Prompt 14 (README) + Prompt 16 (prompt optimization) records
 * a027047 [Docs] Prompt 14 — comprehensive README with project structure, features, tests
