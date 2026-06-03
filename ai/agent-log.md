@@ -22,7 +22,7 @@ Suggested the initial OOP class structure: Person (abstract), Player, Admin, Her
 
 **Related commits:**
 - 9dc43e2 initial project structure and OOP class design
-- e5579b7 add Persistable interface and CSV serialization
+- 7eac0a6 add Persistable interface and CSV serialization
 
 ---
 
