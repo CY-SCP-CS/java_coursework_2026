@@ -1,0 +1,106 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 玩家类
+ * 继承 Person，代表一名游戏玩家
+ * 关联：Player 拥有多个 Hero 对象
+ */
+public class Player extends Person {
+    private String teamId;
+    private int level;        // 1-30
+    private double winRate;   // 0.0-100.0
+    private List<Hero> ownedHeroes;
+
+    public Player() {
+        super();
+        this.ownedHeroes = new ArrayList<>();
+    }
+
+    public Player(String id, String name, String teamId, int level, double winRate) {
+        super(id, name, Role.PLAYER);
+        this.teamId = teamId;
+        this.level = level;
+        this.winRate = winRate;
+        this.ownedHeroes = new ArrayList<>();
+    }
+
+    // === Getters and Setters ===
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public double getWinRate() {
+        return winRate;
+    }
+
+    public void setWinRate(double winRate) {
+        this.winRate = winRate;
+    }
+
+    /**
+     * 返回拥有的英雄列表（防御性拷贝）
+     */
+    public List<Hero> getOwnedHeroes() {
+        return new ArrayList<>(ownedHeroes);
+    }
+
+    /**
+     * 设置拥有的英雄列表
+     */
+    public void setOwnedHeroes(List<Hero> ownedHeroes) {
+        this.ownedHeroes = (ownedHeroes == null) ? new ArrayList<>() : new ArrayList<>(ownedHeroes);
+    }
+
+    /**
+     * 添加一个英雄到玩家
+     */
+    public void addHero(Hero hero) {
+        if (hero != null && !ownedHeroes.contains(hero)) {
+            this.ownedHeroes.add(hero);
+        }
+    }
+
+    /**
+     * 从玩家移除一个英雄
+     */
+    public boolean removeHero(String heroId) {
+        return ownedHeroes.removeIf(h -> h.getHeroId().equals(heroId));
+    }
+
+    @Override
+    public String getDescription() {
+        return "Player: " + getName() + " (Level " + level + ", Win Rate " + winRate + "%)";
+    }
+
+    @Override
+    public String getInfo() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== Player Info ===\n");
+        sb.append("ID: ").append(getId()).append("\n");
+        sb.append("Name: ").append(getName()).append("\n");
+        sb.append("Team ID: ").append(teamId != null ? teamId : "N/A").append("\n");
+        sb.append("Level: ").append(level).append("\n");
+        sb.append("Win Rate: ").append(winRate).append("%\n");
+        sb.append("Owned Heroes (").append(ownedHeroes.size()).append("):\n");
+        for (Hero hero : ownedHeroes) {
+            sb.append("  - ").append(hero.getName()).append(" (").append(hero.getHeroType()).append(")\n");
+        }
+        return sb.toString();
+    }
+}
