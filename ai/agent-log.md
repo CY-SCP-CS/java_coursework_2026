@@ -212,6 +212,33 @@ Fixed all Critical/Major issues found by Code Review Agent during the Prompt 05 
 
 ---
 
+## Implementation Agent (Prompt 10 — File Persistence)
+
+**Main contribution:**
+Implemented full `FileStorageService.java` (~280 lines) with CSV persistence for 7 entity types. 7 CSV files in `data/` directory with UTF-8 encoding and per-line error handling.
+
+**Data flow:**
+- Startup: try loadAllData() → fall back to DataInitializer if files missing
+- Exit/Logout: auto-save via saveData()
+- Loading order respects dependencies: equipment → heroes → passwords → players → equipped_items → teams → matches
+
+**Verified:**
+- ✅ First run: no files → DataInitializer → saves all 7 CSV files (20 equip, 15 heroes, 15 players, 3 teams, 10 matches, 16 passwords, 42 equipped item mappings)
+- ✅ Second run: loads from CSV → displays correctly → saves again
+- ✅ Chinese character data preserved through save/load cycle
+- ✅ Missing files: handled gracefully (WARN log, empty result)
+
+**Human decision:**
+- ✅ All 7 CSV files verified correct format
+- ✅ Equipped items in separate file
+- ✅ Auto-save on exit/logout integrated into Main.java
+- ✅ Robust per-line error skipping
+
+**Related commits:**
+- (Pending — current session commit)
+
+---
+
 ## Testing/Reviewer Agent
 
 **Main contribution:**

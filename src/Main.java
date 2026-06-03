@@ -15,9 +15,21 @@ public class Main {
     private static AuthenticationService authService;
     private static SearchService searchService;
     private static RankingService rankingService;
+    private static FileStorageService fileStorage;
 
     public static void main(String[] args) {
-        dataManager = DataInitializer.initData();
+        fileStorage = new FileStorageService();
+
+        // Try to load saved data first; fall back to initializer
+        GameDataManager loaded = fileStorage.loadAllData();
+        if (loaded.getAllPlayers().isEmpty()) {
+            dataManager = DataInitializer.initData();
+            System.out.println("No saved data found. Initialized with default data.");
+        } else {
+            dataManager = loaded;
+            System.out.println("Loaded saved data from " + new java.io.File("data").getAbsolutePath());
+        }
+
         authService = new AuthenticationService(dataManager);
         searchService = new SearchService(dataManager);
         rankingService = new RankingService(dataManager);
@@ -25,6 +37,12 @@ public class Main {
         System.out.println("=== Honor of Kings IMS ===");
         System.out.println("Welcome to the system!\n");
         showMainMenu();
+    }
+
+    /** 保存所有数据到 CSV 文件 */
+    private static void saveData() {
+        fileStorage.saveAllData(dataManager);
+        System.out.println("Data saved to disk.");
     }
 
     // ========================================================================
@@ -41,6 +59,7 @@ public class Main {
             switch (choice) {
                 case 1 -> handleLogin();
                 case 2 -> {
+                    saveData();
                     System.out.println("Goodbye!");
                     return;
                 }
@@ -99,6 +118,7 @@ public class Main {
                 case 9 -> handleMatchHistory();
                 case 10 -> {
                     authService.logout();
+                    saveData();
                     System.out.println("Logged out.");
                 }
             }
@@ -140,6 +160,7 @@ public class Main {
                 case 11 -> handleMatchHistory();
                 case 12 -> {
                     authService.logout();
+                    saveData();
                     System.out.println("Logged out.");
                 }
             }
