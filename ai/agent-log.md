@@ -132,7 +132,7 @@ Implemented full menu system and input toolkit. Created `InputHelper.java` with 
 - ✅ Both admin and player login paths verified working
 
 **Related commits:**
-- (Pending — [Human] commit for Prompt 05)
+- d19ba8a [Human] implement menu system, input toolkit, and 4-level logger
 
 ---
 
@@ -149,7 +149,40 @@ Created `GameLogger.java` — a 4-level hierarchical logging utility (DEBUG/INFO
 - ✅ Integration-ready for all service classes
 
 **Related commits:**
-- (Pending — [Human] commit for Log Agent)
+- d19ba8a [Human] implement menu system, input toolkit, and 4-level logger
+
+---
+
+## Code Review Agent (Prompt 05 — Menu System)
+
+**Main contribution:**
+Reviewed Prompt 05 implementation: Main.java, InputHelper.java, and GameLogger.java. Focused on input handling correctness, null safety, menu structure, and logging utility design.
+
+**Findings:**
+
+| Severity | Issue | File | Fix |
+|----------|-------|------|-----|
+| Major | Match history for a teamless player shows empty with no explanation | Main.java:358 | Add "Player has no team" check before filtering |
+| Minor | removeMatchRecord doesn't verify existence before printing | Main.java:708 | Add null check |
+| Minor | FileWriter lacks explicit charset | GameLogger.java:58 | Add StandardCharsets.UTF_8 |
+| Minor | readInt/readDouble share duplicated loop pattern | InputHelper.java | Acceptable; could extract readNumber() |
+
+**Other items checked (all passed):**
+- ✅ InputHelper uses unified nextLine() strategy — no Scanner newline bug
+- ✅ All handler methods guard against null/empty collections
+- ✅ Menu structure is clean with proper switch dispatch
+- ✅ No direct Scanner calls in Main.java
+- ✅ GameLogger 4-level priority system works correctly
+- ✅ analyzeLogs() provides structured error analysis output
+
+**Overall quality score:** 8/10
+
+**Human decision:**
+- ✅ Accepted all findings
+- Minor issues noted for future refinement
+
+**Related commits:**
+- d19ba8a (reviewed commit, no separate review commit needed)
 
 ---
 
