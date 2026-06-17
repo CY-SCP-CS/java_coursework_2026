@@ -13,8 +13,5 @@ out/
 .DS_Store
 Thumbs.db
 
-# Data (runtime generated)
-data/*.csv
-
 # Logs
 logs/

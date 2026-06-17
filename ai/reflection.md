@@ -6,7 +6,7 @@
 
 ## 1. 你使用了哪些 AI 工具或模型？
 
-本项目全程使用 **Claude Code CLI**（Anthropic 的 Claude 模型），具体为 Claude Opus 4.6 和 Sonnet 4.6 模型。所有 AI 交互均通过 CLI 工具在终端中完成，未使用其他 AI 工具（如 ChatGPT、GitHub Copilot 等）。
+本项目全程使用 **Claude Code CLI**（Anthropic 的 Claude 模型），具体为 deepseek-v4-flash 模型。所有 AI 交互均通过 CLI 工具在终端中完成，未使用其他 AI 工具（如 ChatGPT、GitHub Copilot 等）。
 
 ## 2. 哪个 prompt 最有用？为什么？
 
@@ -28,7 +28,7 @@
 ## 4. 你如何检查 AI 生成的代码是否正确？
 
 我使用了多种方法：
-1. **编译检查**：每次 AI 生成代码后立刻 `javac` 编译，确保没有语法错误
+1. **编译检查**：每次 AI 生成代码后立刻编译，确保没有语法错误
 2. **运行测试**：179 个 JUnit 测试覆盖了所有核心逻辑，任何回归都能被捕获
 3. **Code Review Agent**：专门的 Review Agent 审查代码风格、设计模式、潜在 bug
 4. **手动运行程序**：通过菜单系统实际操作，验证功能是否正确
@@ -37,10 +37,8 @@
 ## 5. 你自己修复了哪些 bug 而没有让 AI 修复？
 
 人工修复的 bug：
-1. **Scanner nextLine() 残留问题**：AI 最初使用 `nextInt()` + `nextLine()` 混用，导致输入跳过。我统一改为 `nextLine()` + 手动 `Integer.parseInt()` 策略
-2. **CSV 文件编码问题**：AI 在一些地方使用了平台默认编码，我统一改为 UTF-8
-3. **测试数据污染**：某些测试修改了共享的 `GameDataManager` 静态实例，影响其他测试。我将这些测试改为使用隔离的数据或非存在 ID
-4. **Javadoc 注释未闭合**：`RankingService.java` 中一个 `/**` 注释没有用 `*/` 关闭，导致后续代码被吞入注释块，编译报错
+1.  **CSV 文件编码问题**：AI 在一些地方使用了平台默认编码，我统一改为 UTF-8
+2.  **测试数据污染**：某些测试修改了共享的 `GameDataManager` 静态实例，影响其他测试。我将这些测试改为使用隔离的数据或非存在 ID
 
 ## 6. 使用 AI 后你更好地理解了哪个 Java 概念？
 
@@ -69,12 +67,11 @@ AI 在 `getMembers()`、`getOwnedHeroes()` 等方法中返回 `new ArrayList<>(m
 ## 9. 最终项目中哪些部分主要是你自己写的？
 
 人类编写的主要部分：
-- **plan.md**：完整的需求分析和实现规划（基于课程要求但人工编写）
 - **项目结构搭建**：目录创建、Git 初始化、包结构
 - **InputHelper 的 Scanner 策略**：统一使用 nextLine() 处理输入
 - **Main.java 中的菜单流程控制**：整体逻辑结构由我设计
 - **ai/reflection.md**：反思内容全部由我根据实际经历编写
-- **所有 AI prompt 的设计**：我构思并编写了所有发送给 AI 的 prompt
+- **所有 AI prompt 的设计**：我构思并编写了所有发送给 AI 的 prompt，并让AI基于我的需求，按照课程要求的建议进行优化
 
 ## 10. 哪些部分主要由 AI 生成或大量辅助？
 
